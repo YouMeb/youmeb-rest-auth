@@ -31,7 +31,7 @@ module.exports = function ($youmeb, $config, $routes) {
   restAuth.check = function (password, nonce, cnonce, chash) {
     var shasum = crypto.createHash('sha1');
     var hash = shasum.update([password, cnonce, nonce].sort().join('')).digest('hex');
-    return chash === shasum;
+    return chash === hash;
   };
 
   restAuth.saveNonce = function (nonce, done) {
