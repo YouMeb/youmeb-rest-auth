@@ -42,16 +42,28 @@ module.exports = function ($youmeb, $restAuth) {
           return done(err);
         }
         $restAuth.getPassword(login, function (err, password) {
-          console.log(nonce, cnonce);
+          console.log(password, nonce, cnonce, hash);
           var success = $restAuth.check(password, nonce, cnonce, hash);
-          res.jsonp({
-            success: true,
-            data: {
-              loginSuccess: success
-            }
-          });
           if (success) {
-            $restAuth.saveToken(login, token);
+            $restAuth.saveToken(login, function (err, token) {
+              if (err) {
+                return next(err);
+              }
+              res.jsonp({
+                success: true,
+                data: {
+                  loginSuccess: true,
+                  token: token
+                }
+              });
+            });
+          } else {
+            res.jsonp({
+              success: true,
+              data: {
+                loginSuccess: false
+              }
+            });
           }
         });
       });

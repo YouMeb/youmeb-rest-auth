@@ -64,8 +64,13 @@ module.exports = function ($youmeb, $config, $routes) {
     return restAuth;
   };
 
-  restAuth.saveToken = function (login, token, done) {
-    restAuth.emit('saveToken', login, token, done);
+  restAuth.saveToken = function (login, done) {
+    var token;
+    restAuth.emit('saveToken', login, function (t) {
+      token = t;
+    }, function (err) {
+      done(err, token);
+    });
     return restAuth;
   };
 
